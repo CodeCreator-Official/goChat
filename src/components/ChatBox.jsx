@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore'
-import { firestore } from '../firebase/config'
+import { useEffect, useState, useRef } from 'react';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { firestore } from '../firebase/config';
 
 function ChatBox() {
-
-    const [messages, setMessages] = useState([])
+    const [messages, setMessages] = useState([]);
+    const chatEndRef = useRef(null);
 
     async function getMessages() {
         try {
@@ -24,53 +24,62 @@ function ChatBox() {
     }
 
     useEffect(() => {
-        getMessages()
-    }, [])
+        getMessages();
+    }, []);
 
-    messages.map((msg) => {
-        console.log(msg.avatarImage);
-    })
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    const scrollToBottom = () => {
+        chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    };
 
     return (
-        <div className='bg-yellow-400 h-full w-full'>
-            <div className='h-full overflow-y-hidden py-4 mx-auto'>
-                <ul className='flex flex-col gap-4'>
-                    {
-                        messages.map((message) => {
-                            if (message.userId != localStorage.getItem('userId')) {
-                                return (<Sender key={message.id} avatarImage={message.avatarImage} message={message.message} />)
-                            }
-                            return <Receiver key={message.id} avatarImage={message.avatarImage} message={message.message} />
-                        })
-                    }
+        <div className='bg-gray-100 w-full h-[80%]'>
+            <div className='h-full mx-auto py-2'>
+                <ul className='flex h-full flex-col gap-4 overflow-y-auto'>
+                    {messages.map((message) => {
+                        if (message.userId != localStorage.getItem('userId')) {
+                            return <Sender key={message.id} avatarImage={message.avatarImage} username={message.username} message={message.message} />;
+                        }
+                        return <Receiver key={message.id} avatarImage={message.avatarImage} username={localStorage.getItem('userName')} message={message.message} />;
+                    })}
+                    <div ref={chatEndRef} />
                 </ul>
             </div>
         </div>
-    )
+    );
 }
 
-function Sender({ message, avatarImage }) {
+function Sender({ message, avatarImage, username }) {
     return (
-        <li className='flex gap-2 items-start'>
-            <img className='w-10 h-10 mx-4 rounded-full' src={avatarImage} alt="" />
+        <li className='flex gap-1 items-start'>
+            <img className='w-6 h-6 mr-3 ml-2 rounded-full' src={avatarImage} alt='' />
 
-            <div className='flex gap-2 flex-col'>
-                <span className='bg-red-400 w-fit rounded-3xl py-3 px-4 font-medium text-white max-w-[200px]'>{message}</span>
+            <div className='flex gap-y-[2px] py-2 px-3 italic rounded-xl bg-gray-200 border-[2px] justify-end items-start flex-col max-w-[200px]'>
+                <span className='font-medium text-sm'>{username}</span>
+                <span className='w-fit rounded font-medium text-lg text-gray-400'>
+                    {message}
+                </span>
             </div>
         </li>
-    )
+    );
 }
 
-function Receiver({ avatarImage, message }) {
+function Receiver({ avatarImage, message, username }) {
     return (
         <li className='flex flex-row-reverse gap-2 items-start justify-start'>
-            <img className='w-10 h-10 mx-4 rounded-full' src={avatarImage} alt="" />
+            <img className='w-6 h-6 mr-2 ml-3 rounded-full' src={avatarImage} alt='' />
 
-            <div className='flex gap-2 items-end flex-col'>
-                <span className='bg-sky-500 w-fit rounded-3xl py-3 px-4 font-medium text-white max-w-[200px]'>{message}</span>
+            <div className='flex gap-y-[2px] py-2 px-3 italic rounded-xl border-[2px] justify-end items-end flex-col max-w-[200px]'>
+                <span className='font-medium text-sm'>{username}</span>
+                <span className='w-fit rounded font-medium text-lg text-gray-400'>
+                    {message}
+                </span>
             </div>
         </li>
-    )
+    );
 }
 
-export default ChatBox
+export default ChatBox;
