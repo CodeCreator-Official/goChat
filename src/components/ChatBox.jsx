@@ -36,7 +36,7 @@ function ChatBox() {
     };
 
     return (
-        <div className='bg-gray-100 w-full h-[80%]'>
+        <div className='bg-gray-100 w-full h-[87%]'>
             <div className='h-full mx-auto py-2'>
                 <ul className='flex h-full flex-col gap-4 overflow-y-auto'>
                     {messages.map((message) => {

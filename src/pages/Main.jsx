@@ -21,10 +21,10 @@ function Main() {
 
     return (
         <div className='w-full transition-all flex flex-col duration-200 h-screen bg-gray-900'>
-            <div className='h-full flex flex-col justify-evenly'>
-                <nav className='bg-slate-900 h-fit max-h-[10%] px-2 w-full flex items-center justify-between'>
-                    <div className='flex px-1 font-mono py-3 items-center gap-3'>
-                        <img className='w-12 rounded-full' src={localStorage.getItem('userAvatar')} alt="" />
+            <div className='h-full flex items-center w-[100%] mx-auto max-w-[800px] flex-col justify-between'>
+                <nav className='bg-slate-900 h-fit px-2 w-full flex items-center justify-between'>
+                    <div className='flex px-1 font-mono py-2 items-center gap-3'>
+                        <img className='w-10 rounded-full' src={localStorage.getItem('userAvatar')} alt="" />
 
                         <h1 className='text-yellow-400 leading-6 md:text-lg'>
                             <span className='text-gray-400 block md:inline pr-2 italic'></span>
